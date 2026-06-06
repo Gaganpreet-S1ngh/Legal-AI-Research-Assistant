@@ -1,0 +1,39 @@
+{
+  "name": "ai-service",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/server.ts",
+    "start": "node dist/server.js",
+    "build": "tsc -p .",
+    "db:push": "npx prisma migrate dev",
+    "db:migrate": "npx prisma migrate dev --name init",
+    "db:generate": "npx prisma generate"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@pinecone-database/pinecone": "^7.2.0",
+    "@prisma/client": "6.5.0",
+    "@types/express": "5.0.0",
+    "class-transformer": "0.5.1",
+    "class-validator": "0.14.1",
+    "cors": "^2.8.6",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "multer": "^2.1.1",
+    "openai": "^6.42.0",
+    "pdf-parse": "^2.4.5",
+    "pino": "9.6.0",
+    "pino-http": "10.4.0",
+    "pino-pretty": "13.0.0",
+    "ts-node": "10.9.2",
+    "types": "0.1.1",
+    "typescript": "5.8.2"
+  },
+  "devDependencies": {
+    "@types/node": "22.13.10",
+    "prisma": "6.5.0"
+  }
+}

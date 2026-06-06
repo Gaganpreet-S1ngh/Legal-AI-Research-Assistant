@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES6" /* Specify what JSX code is generated. */,
+    "experimentalDecorators": true,
+    "module": "commonjs" /* Specify what module code is generated. */,
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "esModuleInterop": true /* Disable resolving symlinks to their realpath. This correlates to the same flag in node. */,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true /* Enable all strict type-checking options. */,
+    "noImplicitAny": false /* Check that the arguments for 'bind', 'call', and 'apply' methods match the original function. */,
+    "strictPropertyInitialization": false,
+    "skipLibCheck": true /* Skip type checking all .d.ts files. */
+  }
+}
