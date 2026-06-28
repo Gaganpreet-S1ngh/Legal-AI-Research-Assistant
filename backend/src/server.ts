@@ -3,7 +3,7 @@ import { expressApp } from "./expressApp";
 import { logger } from "./utils/logger";
 
 const PORT = process.env.PORT;
-console.log(PORT);
+
 
 const StartServer = async () => {
   const ExpressApp = await expressApp();
