@@ -13,7 +13,6 @@ export class AIRoutes {
 
     private initializeRoutes(): void {
         this.router.post("/embeddings", this.aiController.getEmbeddingsHandler);
-
     }
 
 }

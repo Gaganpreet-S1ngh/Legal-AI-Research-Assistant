@@ -4,7 +4,7 @@ import pino from "pino";
 export const logger = pino({
     level: "info",
     base: {
-        serviceName: "catalog-service",
+        serviceName: "ai-service",
     },
     serializers: pino.stdSerializers,
     timestamp: () => `,"time":"${new Date(Date.now()).toISOString()}"`,

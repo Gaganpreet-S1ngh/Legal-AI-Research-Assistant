@@ -21,10 +21,13 @@
     "dotenv": "^16.5.0",
     "express": "4.21.2",
     "ollama": "^0.6.3",
+    "p-limit": "^7.3.0",
+    "pdf-parse": "^2.4.5",
     "pg": "^8.22.0",
     "pino": "9.6.0",
     "pino-http": "10.4.0",
     "pino-pretty": "13.0.0",
+    "tesseract.js": "^7.0.0",
     "ts-node": "10.9.2",
     "types": "0.1.1",
     "typescript": "5.8.2"
