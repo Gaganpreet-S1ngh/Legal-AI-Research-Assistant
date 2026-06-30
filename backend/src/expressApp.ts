@@ -7,7 +7,10 @@ import { AIController } from "./api/controllers/ai.controller";
 import { AIRoutes } from "./api/routes/ai.routes";
 import { DatabaseManager } from "./config/database.config";
 import { setupSchema } from "./schema/database.schema";
-import { OCRService } from "./utils/ocr/ocr.service";
+import { OCRService } from "./utils/parsers/ocr.service";
+import { PdfParseService } from "./utils/parsers/pdf.service";
+import { MammothService } from "./utils/parsers/docx.service";
+
 
 export const expressApp = async () => {
   const app = express();
@@ -37,6 +40,28 @@ export const expressApp = async () => {
 
   await ocrService.initialize();
 
+  // PDF Parse ServicE
+  const pdfParseService = PdfParseService.getInstance({
+    parseConcurrency: 4,        // how many PDFs to parse in parallel
+    parseTimeout: 30_000,       // ms before a single parse is aborted
+    parseMaxRetries: 2,         // retries on failure/timeout
+    parseRetryBaseMs: 500       // base for exponential backoff
+  })
+
+  await pdfParseService.initialize()
+
+
+  // Mammoth Service
+
+  const mammothService = MammothService.getInstance({
+    convertConcurrency: 4,
+    convertTimeout: 15_000,
+    convertMaxRetries: 2,
+    convertRetryBaseMs: 500
+  });
+
+  await mammothService.initialize()
+
   app.use(express.json());
   app.use(httpLogger);
 
@@ -46,7 +71,7 @@ export const expressApp = async () => {
 
   const ollamaClient = new Ollama({ host: 'http://127.0.0.1:11434' })
   const aiService = new AIService(ollamaClient);
-  const aiController = new AIController(aiService, ocrService);
+  const aiController = new AIController(aiService, ocrService, pdfParseService, mammothService);
   const aIRoutes = new AIRoutes(aiController);
 
   app.use("/api/ai", aIRoutes.router)

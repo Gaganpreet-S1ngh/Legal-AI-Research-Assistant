@@ -1,6 +1,7 @@
 import { createScheduler, createWorker, ImageLike, Scheduler, Worker } from "tesseract.js";
-import { logger } from "../logger";
+
 import pLimit from "p-limit";
+import { logger } from "../logger";
 
 export interface OCROpts {
     ocrConcurrency: number;
@@ -17,7 +18,6 @@ export interface OCRResult {
 }
 
 export class OCRService {
-
     private ocrConcurrency: number;
     private ocrTimeout: number;
     private orcMaxRetries: number;
@@ -39,8 +39,6 @@ export class OCRService {
         this.scheduler = createScheduler();
         this.limiter = pLimit(this.ocrConcurrency);
     }
-
-
 
     static getInstance(opts?: OCROpts): OCRService {
         if (!this._instance) {
@@ -114,7 +112,6 @@ export class OCRService {
 
         return Promise.all(tasks);
     }
-
 
 
     private async recogniseWithRetry(
