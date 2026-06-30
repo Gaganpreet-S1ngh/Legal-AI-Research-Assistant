@@ -50,7 +50,6 @@ export const expressApp = async () => {
 
   await pdfParseService.initialize()
 
-
   // Mammoth Service
 
   const mammothService = MammothService.getInstance({
@@ -70,8 +69,8 @@ export const expressApp = async () => {
   });
 
   const ollamaClient = new Ollama({ host: 'http://127.0.0.1:11434' })
-  const aiService = new AIService(ollamaClient);
-  const aiController = new AIController(aiService, ocrService, pdfParseService, mammothService);
+  const aiService = new AIService(ollamaClient, ocrService, mammothService, pdfParseService);
+  const aiController = new AIController(aiService);
   const aIRoutes = new AIRoutes(aiController);
 
   app.use("/api/ai", aIRoutes.router)
