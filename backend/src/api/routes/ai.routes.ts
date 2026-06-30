@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import { AIController } from "../controllers/ai.controller";
+import { upload } from "../../config/multer.config";
 
 export class AIRoutes {
     public router: Router;
@@ -13,6 +14,7 @@ export class AIRoutes {
 
     private initializeRoutes(): void {
         this.router.post("/embeddings", this.aiController.getEmbeddingsHandler);
+        this.router.post("/upload", upload.single("document"), this.aiController.fileParsingHandler);
     }
 
 }
