@@ -2,6 +2,7 @@ import { PDFParse } from "pdf-parse";
 
 import pLimit from "p-limit";
 import { logger } from "../logger";
+import { ResultType } from "../../types/result.type";
 
 export interface PdfParseOpts {
     parseConcurrency: number;
@@ -65,9 +66,16 @@ export class PdfParseService {
         logger.info("PdfParseService shut down.");
     }
 
-    async extractText(source: PdfSource, pages?: number[]): Promise<PdfTextResult> {
+    async extractText(source: PdfSource, pages?: number[]): Promise<ResultType> {
         this.assertInitialized();
-        return this.limiter(() => this.parseWithRetry(source, pages));
+        const pdfResult = await this.limiter(() => this.parseWithRetry(source, pages));
+
+        return {
+            text: pdfResult.text,
+            metadata: {
+                "num_pages": pdfResult.numPages
+            }
+        }
     }
 
     async extractTextBatch(

@@ -2,6 +2,7 @@ import { createScheduler, createWorker, ImageLike, Scheduler, Worker } from "tes
 
 import pLimit from "p-limit";
 import { logger } from "../logger";
+import { ResultType } from "../../types/result.type";
 
 export interface OCROpts {
     ocrConcurrency: number;
@@ -80,14 +81,19 @@ export class OCRService {
     }
 
 
-    async recognize(image: ImageLike, lang?: string): Promise<OCRResult> {
+    async recognize(image: ImageLike, lang?: string): Promise<ResultType> {
         this.assertInitialized();
 
         // Calling plimit to limit concurrency so that less CPU and memory is used for this CPU intensive process
-        const result = this.limiter(() => this.recogniseWithRetry(image, lang ?? this.defaultLang))
-        console.log(result);
+        const ocResult = await this.limiter(() => this.recogniseWithRetry(image, lang ?? this.defaultLang))
 
-        return result;
+        return {
+            text: ocResult.text,
+            metadata: {
+                "ocr_confidence": ocResult.confidence,
+                "language": ocResult.lang
+            }
+        };
     }
 
     async recogniseBatch(

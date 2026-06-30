@@ -1,6 +1,7 @@
 import mammoth from "mammoth";
 import { logger } from "../logger";
 import pLimit from "p-limit";
+import { ResultType } from "../../types/result.type";
 
 export interface MammothOpts {
     convertConcurrency: number;
@@ -73,10 +74,8 @@ export class MammothService {
 
     async convert(
         source: DocxSource,
-        format: ConvertFormat = "html"
     ): Promise<MammothResult> {
         this.assertInitialized();
-
         return this.limiter(() => this.convertWithRetry(source));
     }
 
@@ -105,10 +104,16 @@ export class MammothService {
 
     // Convenience helper for when you just want plain text (e.g. for search
     // indexing) rather than HTML/Markdown.
-    async extractRawText(source: DocxSource): Promise<MammothResult> {
+    async extractRawText(source: DocxSource): Promise<ResultType> {
         this.assertInitialized();
+        const mammothResult = await this.limiter(() => this.runWithTimeout(() => mammoth.extractRawText(source as any)));
 
-        return this.limiter(() => this.runWithTimeout(() => mammoth.extractRawText(source as any)));
+        return {
+            text: mammothResult.value,
+            metadata: {
+                "messages": mammothResult.messages
+            }
+        }
     }
 
     private async convertWithRetry(

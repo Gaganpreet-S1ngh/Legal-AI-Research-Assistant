@@ -3,6 +3,7 @@ import { AIService } from "../../services/ai.service";
 import { OCRService, OCRResult } from "../../utils/parsers/ocr.service";
 import { PdfParseService, PdfTextResult } from "../../utils/parsers/pdf.service";
 import { MammothService } from "../../utils/parsers/docx.service";
+import { ResultType } from "../../types/result.type";
 
 
 export class AIController {
@@ -49,7 +50,7 @@ export class AIController {
                 return;
             }
 
-            let result: any;
+            let result: ResultType;
 
             // Add more documents
             if (req.file.mimetype.startsWith("image/")) {
@@ -68,7 +69,7 @@ export class AIController {
 
             res.json({
                 success: true,
-                data: result
+                result
             });
         } catch (error) {
             console.error(error);
