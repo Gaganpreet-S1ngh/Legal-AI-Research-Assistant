@@ -24,14 +24,13 @@ export class AIService {
         this.mammothService = mammothService;
     }
 
-    async getEmbedding(text: string): Promise<number[]> {
+    async getEmbedding(text: string): Promise<any> {
         try {
 
             // Chunk Text first
-
             const splitter = new RecursiveCharacterTextSplitter({
                 chunkSize: 500,
-                chunkOverlap: 50, // preserve context accross splits or boundaries
+                chunkOverlap: 150, // preserve context accross splits or boundaries
                 separators: ["\n\n", "\n", ". ", " ", ""], // try in order
             })
 
@@ -41,29 +40,26 @@ export class AIService {
 
             console.log(chunks)
 
-
             for (let i = 0; i < chunks.length; i += BATCH_SIZE) {
                 const batch = chunks.slice(i, i + BATCH_SIZE); // batch = 50 chunks
+                console.log(batch);
                 const response = await this.ollama.embed({
                     model: this.embeddingModel,
                     input: batch
                 })
 
+                console.log(response);
                 batch.forEach((chunk, j) => {
                     result.push({
-                        id: `${sourceId}-${i + j}`,
+                        id: `ID-${i + j}`,
                         text: chunk,
                         embedding: response.embeddings[j],
-                        metadata: { sourceId, chunkIndex: i + j },
+                        metadata: { chunkID: `ID-${i + j}`, chunkIndex: i + j },
                     })
                 })
             }
 
-            const response = await this.ollama.embed({
-                model: this.embeddingModel,
-                input: text
-            })
-            return response.embeddings[0];
+            return result
 
         } catch (error) {
             logger.error(error, "Error getting embeddings");
