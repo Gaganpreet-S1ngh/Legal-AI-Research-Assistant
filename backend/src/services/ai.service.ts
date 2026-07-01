@@ -4,6 +4,7 @@ import { MammothService } from "../utils/parsers/docx.service";
 import { OCRService } from "../utils/parsers/ocr.service";
 import { PdfParseService } from "../utils/parsers/pdf.service";
 import { ResultType } from "../types/result.type";
+import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 
 export class AIService {
 
@@ -25,6 +26,39 @@ export class AIService {
 
     async getEmbedding(text: string): Promise<number[]> {
         try {
+
+            // Chunk Text first
+
+            const splitter = new RecursiveCharacterTextSplitter({
+                chunkSize: 500,
+                chunkOverlap: 50, // preserve context accross splits or boundaries
+                separators: ["\n\n", "\n", ". ", " ", ""], // try in order
+            })
+
+            const chunks = await splitter.splitText(text);
+            const BATCH_SIZE = 50; // Avoid huge single request (50 chunks)
+            const result: any = [];
+
+            console.log(chunks)
+
+
+            for (let i = 0; i < chunks.length; i += BATCH_SIZE) {
+                const batch = chunks.slice(i, i + BATCH_SIZE); // batch = 50 chunks
+                const response = await this.ollama.embed({
+                    model: this.embeddingModel,
+                    input: batch
+                })
+
+                batch.forEach((chunk, j) => {
+                    result.push({
+                        id: `${sourceId}-${i + j}`,
+                        text: chunk,
+                        embedding: response.embeddings[j],
+                        metadata: { sourceId, chunkIndex: i + j },
+                    })
+                })
+            }
+
             const response = await this.ollama.embed({
                 model: this.embeddingModel,
                 input: text

@@ -54,7 +54,7 @@ export class OCRService {
         if (this.initialized) return;
 
         const targetLang = lang ?? this.defaultLang;
-        logger.info(`Initializing OCRService with ${this.ocrConcurrency} worker(s) for lang "${targetLang}"…`);
+        logger.info(`Initializing OCRService with ${this.ocrConcurrency} worker(s) for lang "${targetLang}"`);
 
         const workerPromises = Array.from({ length: this.ocrConcurrency }, async () => {
             const worker = await createWorker(targetLang);
@@ -194,7 +194,7 @@ export class OCRService {
     }
 
     private async gracefulShutdown(): Promise<void> {
-        logger.info("Received shutdown signal, terminating OCR scheduler…");
+        logger.info("Received shutdown signal, terminating OCR scheduler");
         await this.disconnect();
         process.exit(0);
     }

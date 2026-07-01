@@ -57,7 +57,7 @@ export class MammothService {
     async initialize(): Promise<void> {
         if (this.initialized) return;
 
-        logger.info(`Initializing MammothService with concurrency ${this.convertConcurrency}…`);
+        logger.info(`Initializing MammothService with concurrency ${this.convertConcurrency}`);
         this.initialized = true;
 
         process.once("SIGTERM", () => this.gracefulShutdown());

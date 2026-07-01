@@ -6,7 +6,8 @@ const allowedImageTypes = [
     "image/gif",
     "image/png",
     "image/webp",
-    "application/pdf"
+    "application/pdf",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 ];
 
 // Filter

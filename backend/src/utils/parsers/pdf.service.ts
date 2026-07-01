@@ -51,7 +51,7 @@ export class PdfParseService {
     async initialize(): Promise<void> {
         if (this.initialized) return;
 
-        logger.info(`Initializing PdfParseService with concurrency ${this.parseConcurrency}…`);
+        logger.info(`Initializing PdfParseService with concurrency ${this.parseConcurrency}`);
         this.initialized = true;
 
         process.once("SIGTERM", () => this.gracefulShutdown());

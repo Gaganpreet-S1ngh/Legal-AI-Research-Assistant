@@ -32,6 +32,7 @@ export class AIController {
 
     getFileEmbeddingHandler = async (req: Request, res: Response, next: NextFunction) => {
         try {
+            console.log(req.file)
 
             if (!req.file) {
                 res.status(400).json({
